@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#16a34a" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🥗</text></svg>" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="style.css" />
+  <title>Snap Calories</title>
+</head>
+<body>
+  <header>
+    <h1>Snap Calories</h1>
+    <button id="settings-btn" class="icon-btn" aria-label="Settings">⚙️</button>
+  </header>
+
+  <main>
+    <nav class="day-nav">
+      <button id="prev-day" class="icon-btn" aria-label="Previous day">‹</button>
+      <input type="date" id="day-picker" />
+      <button id="next-day" class="icon-btn" aria-label="Next day">›</button>
+    </nav>
+
+    <section class="summary">
+      <div class="ring-wrap">
+        <svg viewBox="0 0 120 120" class="ring">
+          <circle cx="60" cy="60" r="52" class="ring-bg" />
+          <circle cx="60" cy="60" r="52" class="ring-fg" id="ring-fg" />
+        </svg>
+        <div class="ring-label">
+          <strong id="remaining">0</strong>
+          <span>kcal left</span>
+        </div>
+      </div>
+      <div class="stats">
+        <div><span>Goal</span><strong id="goal">2000</strong></div>
+        <div><span>Eaten</span><strong id="eaten">0</strong></div>
+        <div><span>Burned (steps)</span><strong id="burned">0</strong></div>
+        <div><span>Steps</span><strong id="steps">0</strong></div>
+      </div>
+      <div class="macros">
+        <span>P <strong id="protein">0</strong>g</span>
+        <span>C <strong id="carbs">0</strong>g</span>
+        <span>F <strong id="fat">0</strong>g</span>
+      </div>
+    </section>
+
+    <section class="capture">
+      <label class="snap-btn">
+        📷 Snap food
+        <input type="file" id="photo-input" accept="image/*" capture="environment" hidden />
+      </label>
+      <label class="secondary-btn">
+        🖼️ From gallery
+        <input type="file" id="gallery-input" accept="image/*" hidden />
+      </label>
+    </section>
+
+    <section id="analyzing" class="card hidden">
+      <img id="preview" alt="Food photo" />
+      <p class="status" id="analyze-status">Analyzing your food…</p>
+      <div id="result" class="hidden">
+        <h3 id="result-title"></h3>
+        <ul id="result-items"></ul>
+        <div class="row">
+          <label>Meal
+            <select id="meal-type">
+              <option>Breakfast</option>
+              <option>Lunch</option>
+              <option>Dinner</option>
+              <option>Snack</option>
+            </select>
+          </label>
+          <label>Portion ×
+            <input type="number" id="portion" value="1" min="0.25" step="0.25" />
+          </label>
+        </div>
+        <p class="total">Total: <strong id="result-total">0</strong> kcal</p>
+        <div class="row">
+          <button id="save-meal" class="primary">Log it</button>
+          <button id="cancel-meal">Discard</button>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Food log</h2>
+      <ul id="log" class="log"></ul>
+      <p id="log-empty" class="muted">Nothing logged yet. Snap your first meal!</p>
+    </section>
+
+    <section class="card">
+      <h2>Steps · Samsung Health</h2>
+      <p class="muted">
+        Import your Samsung Health export (Samsung Health → Settings → Download personal data),
+        then pick the <code>step_daily_trend</code> or <code>pedometer_step_count</code> CSV.
+      </p>
+      <div class="row">
+        <label class="secondary-btn">
+          ⬆️ Import CSV
+          <input type="file" id="steps-csv" accept=".csv,text/csv" hidden />
+        </label>
+        <input type="number" id="manual-steps" placeholder="Steps today" min="0" />
+        <button id="save-steps">Save</button>
+      </div>
+      <p id="steps-status" class="muted"></p>
+    </section>
+  </main>
+
+  <dialog id="settings">
+    <form method="dialog">
+      <h2>Settings</h2>
+      <label>Anthropic API key
+        <input type="password" id="api-key" placeholder="sk-ant-..." autocomplete="off" />
+      </label>
+      <p class="muted small">Stored only in this browser. Used to send food photos to Claude for analysis.</p>
+      <label>Daily calorie goal
+        <input type="number" id="goal-input" min="800" step="50" />
+      </label>
+      <label>Body weight (kg) — for step calories
+        <input type="number" id="weight-input" min="30" step="0.5" />
+      </label>
+      <div class="row">
+        <button value="save" class="primary" id="settings-save">Save</button>
+        <button value="cancel">Close</button>
+      </div>
+      <hr />
+      <button type="button" id="export-data">Export my data (JSON)</button>
+    </form>
+  </dialog>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
